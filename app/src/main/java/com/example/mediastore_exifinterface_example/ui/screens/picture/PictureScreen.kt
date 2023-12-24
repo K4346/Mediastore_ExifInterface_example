@@ -89,10 +89,10 @@ fun PictureScreen(vm: PictureViewModel = viewModel(), navController: NavHostCont
                         Text("Модель: $it")
                     }
                     exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE)?.let {
-                        Text("Широта: $it")
+                        Text("Широта: ${vm.getLocationFromAttr(it)}")
                     }
                     exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)?.let {
-                        Text("Долгота: $it")
+                        Text("Долгота: ${vm.getLocationFromAttr(it)}")
                     }
                 }
             Button(onClick = {

@@ -3,6 +3,7 @@ package com.example.mediastore_exifinterface_example.ui.screens.editor
 import android.app.Application
 import android.content.ContentResolver
 import android.net.Uri
+import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -70,8 +71,8 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
         _uiState.value =
             EditorUiState(
                 getCorrectDate(date),
-                latitude,
-                longitude,
+                getLocationFromAttr(latitude),
+                getLocationFromAttr(longitude),
                 phoneName,
                 phoneModel
             )
@@ -150,7 +151,8 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
                 val exif = ExifInterface(fileDescriptor.fileDescriptor)
 
                 if (_uiCheckBoxState.value.date) {
-                    val date = newDate?.format(formatter)
+                    val date = newDate?.format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss"))
+                    Log.i("kpop11",date.toString())
                     exif.setAttribute(ExifInterface.TAG_DATETIME, date)
                 }
 
@@ -170,13 +172,15 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
 
                     val lon = _uiState.value.longitude
                     exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, lon)
+                    exif.setLatLong(lat!!.toDouble(),lon!!.toDouble())
                 }
                 exif.saveAttributes()
             }
         _navigateToPictureScreen.value = true
     }
-
-
+    private fun getLocationFromAttr(location:String?):String{
+        return location?.split("/")?.get(0) ?: ""
+    }
     val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
 
 }

@@ -15,4 +15,8 @@ class PictureViewModel(application: Application) : AndroidViewModel(application)
     fun setImage(uri: Uri) {
         _imageUri.value = uri
     }
+
+    fun getLocationFromAttr(location: String?): String {
+        return location?.split("/")?.get(0) ?: ""
+    }
 }
